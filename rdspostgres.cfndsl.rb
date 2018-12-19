@@ -38,8 +38,8 @@ CloudFormation do
     Engine 'postgres'
     EngineVersion engineVersion
     DBParameterGroupName Ref('ParametersRDS')
-    MasterUsername  master_username if defined? master_username
-    MasterUserPassword master_password if defined? master_password
+    MasterUsername  FnJoin('', [ '{{resolve:ssm:', FnSub(master_login['username_ssm_param']), ':1}}' ])
+    MasterUserPassword FnJoin('', [ '{{resolve:ssm-secure:', FnSub(master_login['password_ssm_param']), ':1}}' ])
     DBSnapshotIdentifier  Ref('RDSSnapshotID')
     DBSubnetGroupName  Ref('SubnetGroupRDS')
     VPCSecurityGroups [Ref('SecurityGroupRDS')]

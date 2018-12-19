@@ -15,8 +15,9 @@ deletion_policy: Snapshot
 parameters:
   authentication_timeout: '60'
 
-# master_username: postgres
-# master_password: postgres
+master_login:
+  username_ssm_param: /rds/POSTGRES_MASTER_USERNAME
+  password_ssm_param: /rds/POSTGRES_MASTER_PASSWORD
 
 security_group:
   -
