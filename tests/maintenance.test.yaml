@@ -1,0 +1,6 @@
+test_metadata:
+  type: config
+  name: maintenance
+  description: testing the rds maintenance window property with config override
+
+maintenance_window: sun:18:30-sun:19:00

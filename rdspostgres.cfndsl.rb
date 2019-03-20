@@ -15,6 +15,13 @@ CloudFormation do
     GroupDescription FnJoin(' ', [ Ref(:EnvironmentName), component_name, 'security group' ])
     SecurityGroupIngress sg_create_rules(security_group, ip_blocks)
     Tags tags + [{ Key: 'Name', Value: FnJoin('-', [ Ref(:EnvironmentName), component_name, 'security-group' ])}]
+    Metadata({
+      cfn_nag: {
+        rules_to_suppress: [
+          { id: 'F1000', reason: 'specifying explicit egress rules unnecessary' }
+        ]
+      }
+    })
   end
 
   RDS_DBSubnetGroup 'SubnetGroupRDS' do
@@ -41,13 +48,23 @@ CloudFormation do
     Engine 'postgres'
     EngineVersion engineVersion
     DBParameterGroupName Ref('ParametersRDS')
-    MasterUsername  instance_username
+    MasterUsername instance_username
     MasterUserPassword instance_password
-    DBSnapshotIdentifier  Ref('RDSSnapshotID')
-    DBSubnetGroupName  Ref('SubnetGroupRDS')
+    DBSnapshotIdentifier Ref('RDSSnapshotID')
+    DBSubnetGroupName Ref('SubnetGroupRDS')
     VPCSecurityGroups [Ref('SecurityGroupRDS')]
     MultiAZ Ref('MultiAZ')
+    PreferredMaintenanceWindow maintenance_window if defined? maintenance_window
+    PubliclyAccessible publicly_accessible if defined? publicly_accessible
     Tags  tags + [{ Key: 'Name', Value: FnJoin('-', [ Ref(:EnvironmentName), component_name, 'instance' ])}]
+    Metadata({
+      cfn_nag: {
+        rules_to_suppress: [
+          { id: 'F23', reason: 'ignoring until further action is required' },
+          { id: 'F24', reason: 'ignoring until further action is required' }
+        ]
+      }
+    })
   end
 
   Route53_RecordSet('DatabaseIntHostRecord') do
