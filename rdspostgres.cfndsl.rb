@@ -47,6 +47,7 @@ CloudFormation do
     DBSubnetGroupName  Ref('SubnetGroupRDS')
     VPCSecurityGroups [Ref('SecurityGroupRDS')]
     MultiAZ Ref('MultiAZ')
+    PreferredMaintenanceWindow maintenance_window if defined? maintenance_window
     Tags  tags + [{ Key: 'Name', Value: FnJoin('-', [ Ref(:EnvironmentName), component_name, 'instance' ])}]
   end
 
