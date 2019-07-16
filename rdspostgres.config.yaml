@@ -6,7 +6,7 @@ ip_blocks:
     - 127.0.0.1/32
 
 # CLI to query engine and family: aws rds describe-db-engine-versions
-engineVersion: '10.4'
+engineVersion: '10.6'
 family: postgres10
 
 publicly_accessible: false
